@@ -9,17 +9,54 @@
 # 오른쪽과 아래쪽으로만 움직여 집에서 학교까지 갈 수 있는 최단경로의 개수를
 # 1,000,000,007로 나눈 나머지를 return 하도록 solution 함수를 작성해주세요.
 
+
+#DFS
+#graph = { 'A' = ['B','C'], 'B' = ['D', 'E'] .. }
+#visited = set()
+#
+#def dfs(visitied, graph, node):
+#   if node not in visited:
+#       print(node)
+#       visited.add(node)
+#	for neighbor in graph[node]:
+#		dfs(visited, graph, neighbor)
+
+def convertGraph(m,n,puddles):
+    graph = dict()
+    index = 1
+    puddlesList = []
+    for i in range(len(puddles)):
+        puddlesList.append( (puddles[i][0]) + ((puddles[i][1]-1)*m) )
+    print(puddlesList)
+    for i in range(n):
+        for j in range(m):
+            if index not in puddlesList:
+                listTmp = []
+                if j != (m-1) and (index+1) not in puddlesList:
+                    listTmp.append( index +1)
+                if i != (n-1) and (index+m) not in puddlesList:
+                    listTmp.append( index +m)
+                graph[index] = list(listTmp)
+            index = index + 1
+    print(graph)
+    return graph
+
+
+def dfs(visited, graph, node):
+   if node not in visited:
+       print(node)
+       #if node == 
+       visited.add(node)
+       for neighbor in graph[node]:
+               dfs(visited, graph, neighbor)
+
 def solution(m, n, puddles):
     answer = 0
-
-    current = [1,1]
-
-    while(True):
-
-        break
-    # for col in range(1, m+1):
-    #     for row in range(1,n+1):
-            
+    visited = set()
+    graph = convertGraph(m,n,puddles)
+    print(type(graph))
+    print(type(graph[1]))
+    dfs(visited, graph, 1)        
 
     return answer
 
