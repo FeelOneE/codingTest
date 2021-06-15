@@ -33,7 +33,9 @@ def isPuddle(m,n,puddles):
                 return True
     return check
 
-#인접 그래프로 변환
+###인접 그래프로 변환
+# 움직이는 방향은 오른쪽(+1) 아니면 아래쪽(+m)이므로 두 가지만 웅덩이인지 판별함
+# 판별 후 인접 그래프에 1로 할당함 (연결되어 있다고 명시
 def convertGraph(m, n, puddles):
     graph = [ [0 for _ in range(m*n+1)] for _ in range(m*n+1)  ]
     index = 1
@@ -52,26 +54,28 @@ def convertGraph(m, n, puddles):
     #for g in graph:
         #print(g)
     return graph
-
+##
 visit = []
 stack = []
 count =0
-
+## dfs
+# 현재 노드가 마지막 노드에 도달하면 
+# 
 def dfs(graph, curr, end):
     global visit
     global stack
     global count
     #print("append stack :", curr)
-    stack.append(curr)
-    visit[curr] = True
-    if curr == end:
+    stack.append(curr) # 현재 노드를 스택에 넣음
+    visit[curr] = True # 현재 노드를 방문 했다고 표시
+    if curr == end:  # 현재 노드가 목표 마지막 노드라면
         #print(stack)
-        count = count + 1
-        visit[curr] = False
-        stack.pop()
-        return    
-    for i in range(len(graph)):
-        if graph[curr][i] == 1:
+        count = count + 1  # 카운트 +1
+        visit[curr] = False # 마지막 노드는 방문 표시 하지 않음
+        stack.pop() # 스택에서 꺼냄
+        return    # 함수 종료
+    for i in range(len(graph)): # 인접한 노드가 있는지 확인
+        if graph[curr][i] == 1:  # 
             visit[curr] = False
             dfs(graph, i, end)
     stack.pop()
@@ -88,7 +92,7 @@ def solution(m, n, puddles):
 
 
 if __name__ == "__main__":
-    m = 3
-    n = 4
+    m = 7
+    n = 8
     puddles = [[2, 2]]
     print(solution(m, n, puddles))
