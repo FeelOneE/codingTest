@@ -10,59 +10,85 @@
 # 1,000,000,007로 나눈 나머지를 return 하도록 solution 함수를 작성해주세요.
 
 
-#DFS
-#graph = { 'A' = ['B','C'], 'B' = ['D', 'E'] .. }
+# DFS
+# graph = { 'A' = ['B','C'], 'B' = ['D', 'E'] .. }
 #visited = set()
 #
-#def dfs(visitied, graph, node):
+# def dfs(visitied, graph, node):
 #   if node not in visited:
 #       print(node)
 #       visited.add(node)
 #	for neighbor in graph[node]:
 #		dfs(visited, graph, neighbor)
 
-def convertGraph(m,n,puddles):
-    graph = dict()
+#global 변수
+
+
+#웅덩이 판별 함수
+def isPuddle(m,n,puddles):
+    check = False
+    if len(puddles) > 0:
+        for pud in puddles:
+            if pud[0] == n and pud[1] == m:
+                return True
+    return check
+
+#인접 그래프로 변환
+def convertGraph(m, n, puddles):
+    graph = [ [0 for _ in range(m*n+1)] for _ in range(m*n+1)  ]
     index = 1
-    puddlesList = []
-    for i in range(len(puddles)):
-        puddlesList.append( (puddles[i][0]) + ((puddles[i][1]-1)*m) )
-    print(puddlesList)
-    for i in range(n):
-        for j in range(m):
-            if index not in puddlesList:
-                listTmp = []
-                if j != (m-1) and (index+1) not in puddlesList:
-                    listTmp.append( index +1)
-                if i != (n-1) and (index+m) not in puddlesList:
-                    listTmp.append( index +m)
-                graph[index] = list(listTmp)
+    
+    for i in range(1,n+1):
+        for j in range(1,m+1):
+            #print("i,j :",i,",",j)
+            if isPuddle(i,j,puddles) == False:
+                if j != m and isPuddle(i,j+1,puddles) == False:
+                    graph[index][index+1] = 1
+                    #print(index,", ",index+1," is connect")
+                if i != n and isPuddle(i+1,j,puddles) == False:
+                    graph[index][index+m] = 1
+                    #print(index,", ",index+m," is connect")
             index = index + 1
-    print(graph)
+    #for g in graph:
+        #print(g)
     return graph
 
+visit = []
+stack = []
+count =0
 
-def dfs(visited, graph, node):
-   if node not in visited:
-       print(node)
-       #if node == 
-       visited.add(node)
-       for neighbor in graph[node]:
-               dfs(visited, graph, neighbor)
-
+def dfs(graph, curr, end):
+    global visit
+    global stack
+    global count
+    #print("append stack :", curr)
+    stack.append(curr)
+    visit[curr] = True
+    if curr == end:
+        #print(stack)
+        count = count + 1
+        visit[curr] = False
+        stack.pop()
+        return    
+    for i in range(len(graph)):
+        if graph[curr][i] == 1:
+            visit[curr] = False
+            dfs(graph, i, end)
+    stack.pop()
+    
 def solution(m, n, puddles):
     answer = 0
-    visited = set()
-    graph = convertGraph(m,n,puddles)
-    print(type(graph))
-    print(type(graph[1]))
-    dfs(visited, graph, 1)        
-
+    global visit
+    global count
+    visit = [0 for _ in range(m*n+1)]
+    graph = convertGraph(m, n, puddles)
+    dfs(graph, 1, m*n)
+    answer = count
     return answer
 
 
 if __name__ == "__main__":
-    m = 4
-    n = 3
+    m = 3
+    n = 4
     puddles = [[2, 2]]
-    solution(m, n, puddles)
+    print(solution(m, n, puddles))
